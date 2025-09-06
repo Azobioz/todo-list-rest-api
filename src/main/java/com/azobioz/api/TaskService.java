@@ -45,18 +45,21 @@ public class TaskService {
         return repository.getTaskById(id);
     }
 
-    public void updateTask(Integer id, Task updatedTask) {
-        Task task = repository.getTaskById(id)
+    @Transactional
+    public void updateTask(Integer id, TaskUpdateDTO updateDTO) {
+        Task task = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-        if (updatedTask.getTitle() != null) {
-            task.setTitle(updatedTask.getTitle());
+
+        if (updateDTO.getTitle() != null) {
+            task.setTitle(updateDTO.getTitle());
         }
-        if (updatedTask.getDescription() != null) {
-            task.setDescription(updatedTask.getDescription());
+        if (updateDTO.getDescription() != null) {
+            task.setDescription(updateDTO.getDescription());
         }
-        if (updatedTask.getCompleted() != task.getCompleted()) {
-            task.setCompleted(updatedTask.getCompleted());
+        if (updateDTO.getCompleted() != null) {
+            task.setCompleted(updateDTO.getCompleted());
         }
+
         repository.save(task);
     }
 }

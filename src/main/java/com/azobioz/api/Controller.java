@@ -1,6 +1,8 @@
 package com.azobioz.api;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,9 +18,9 @@ public class Controller {
     }
 
     @PostMapping("/tasks")
-    public Integer createTask(@RequestBody Task task) {
+    public ResponseEntity<Integer> createTask(@Valid @RequestBody Task task) {
         taskService.saveTask(task);
-        return task.getId();
+        return ResponseEntity.status(HttpStatus.CREATED).body(task.getId());
     }
 
     @GetMapping("/tasks")
@@ -38,8 +40,8 @@ public class Controller {
     }
 
     @PutMapping("/tasks/{id}")
-    public void updateTask(@PathVariable("id") Integer id, @RequestBody Task task) {
-        taskService.updateTask(id, task);
+    public void updateTask(@PathVariable Integer id, @RequestBody TaskUpdateDTO updateDTO) {
+        taskService.updateTask(id, updateDTO);
     }
 
     @DeleteMapping("/tasks/{id}")
